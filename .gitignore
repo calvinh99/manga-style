@@ -1,0 +1,9 @@
+# auto files
+.DS_Store
+.ipynb_checkpoints
+
+# WebDriver Manager
+.wdm
+
+# folders
+data
