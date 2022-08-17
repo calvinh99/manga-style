@@ -9,15 +9,17 @@ class TwitterArtist(models.Model):
     username = models.CharField(max_length=15, unique=True, blank=False)
     followers_count = models.IntegerField(default=0)
     profile_image_url = models.URLField(max_length=200, default='', blank=True)
+    last_updated = models.DateTimeField(blank=False)
     
     def __str__(self):
         return self.username
 
-    def get_recent_media_tweets(self):
+    def update_self_and_media_tweets(self):
         """
-        Gets recent media tweets (at max 7 days ago) using
-        twitter recent search API request. Store returned 
-        tweets and save to database.
+        Gets recent media tweets (at max 7 days ago) and 
+        user data (followers, profile_image_url, last_updated, etc.) 
+        using twitter recent search API request. Store returned 
+        tweets and updated user data and save to database.
 
         Get created_at of most recent MediaTweet. If older 
         than one week, then set start_time to one week ago, 

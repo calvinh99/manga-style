@@ -11,5 +11,8 @@ data
 # mysql db
 my.cnf
 
+# pycache
+__pycache__
+
 # dotenv
 .env
