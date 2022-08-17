@@ -7,3 +7,9 @@
 
 # folders
 data
+
+# mysql db
+my.cnf
+
+# dotenv
+.env
