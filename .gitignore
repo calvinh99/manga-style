@@ -1,5 +1,7 @@
 # auto files
 .DS_Store
+
+# Jupyter Notebook
 .ipynb_checkpoints
 
 # WebDriver Manager
@@ -11,8 +13,13 @@ data
 # mysql db
 my.cnf
 
-# pycache
-__pycache__
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+db.sqlite3
 
 # dotenv
 .env
