@@ -1,0 +1,10 @@
+.artist-profile-image {
+    width: 32px;
+    border-radius: 16px;
+    margin-right: 5px;
+}
+
+.artist-username {
+    font-weight: 300;
+    padding-top: 2px;
+}

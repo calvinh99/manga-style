@@ -1,0 +1,39 @@
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    column-gap: 20px;
+    row-gap: 30px;
+}
+
+.media-card {
+    color: rgb(113, 118, 123);
+    font-size: 14px;
+    overflow: default;
+
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: top;
+}
+
+.artist-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.media-image-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.media-info-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    position: relative;
+}

@@ -50,8 +50,8 @@ class MediaAttachment(models.Model):
     media_id = models.CharField(max_length=40, unique=True, blank=False)
     media_url = models.URLField(max_length=200, unique=True, blank=False)
     media_type = models.CharField(max_length=10)
-    # perhaps a field for class like 'media_style' after implementing our ML model
-    parent_tweet = models.ForeignKey(MediaTweet, to_field='tweet_id',on_delete=models.CASCADE)
+    media_style = models.CharField(max_length=10, default='')
+    parent_tweet = models.ForeignKey(MediaTweet, to_field='tweet_id', on_delete=models.CASCADE)
     
     def __str__(self):
         return self.media_url

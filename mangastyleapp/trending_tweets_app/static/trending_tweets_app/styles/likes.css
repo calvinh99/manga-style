@@ -1,0 +1,21 @@
+.likes-count-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    position: absolute;
+    right: 10px;
+}
+
+.likes-icon-container {
+    margin-right: 8px;
+    margin-top: 2px;
+}
+
+.likes-icon-svg {
+    width: 15px;
+    height: 15px;
+    stroke: rgb(113, 118, 123);
+    stroke-width: 0.5px;
+    fill: rgb(113, 118, 123);
+}
