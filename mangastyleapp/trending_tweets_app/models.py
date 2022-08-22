@@ -7,9 +7,10 @@ from django.utils import timezone
 class TwitterArtist(models.Model):
     user_id = models.CharField(max_length=40, unique=True, blank=False)
     username = models.CharField(max_length=15, unique=True, blank=False)
+    name = models.CharField(max_length=50, unique=False, default='', blank=True)
     followers_count = models.IntegerField(default=0)
     profile_image_url = models.URLField(max_length=200, default='', blank=True)
-    last_updated = models.DateTimeField(blank=False)
+    last_updated = models.DateTimeField(auto_now=True, blank=False)
     
     def __str__(self):
         return self.username
@@ -30,7 +31,7 @@ class TwitterArtist(models.Model):
 
 class MediaTweet(models.Model):
     tweet_id = models.CharField(max_length=40, unique=True, blank=False)
-    tweet_url = models.URLField(max_length=200, unique=True, blank=False)
+    text = models.URLField(max_length=560, unique=False, default='', blank=True)
     likes_count = models.IntegerField(default=0)
     retweets_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(blank=False)
@@ -38,7 +39,7 @@ class MediaTweet(models.Model):
     author = models.ForeignKey(TwitterArtist, to_field='user_id', on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.tweet_url
+        return self.author.username + " tweeted at " + self.created_at.strftime("%Y-%m-%d")
 
     def get_media_urls(self):
         """
@@ -54,7 +55,7 @@ class MediaAttachment(models.Model):
     parent_tweet = models.ForeignKey(MediaTweet, to_field='tweet_id', on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.media_url
+        return self.parent_tweet.author.username + " " + self.media_url
 
     def get_style_classified(self):
         """

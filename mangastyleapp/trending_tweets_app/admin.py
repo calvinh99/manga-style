@@ -7,7 +7,9 @@ class MediaAttachmentInline(admin.TabularInline):
     extra = 1
 
 class MediaTweetAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'created_at',)
     inlines = [MediaAttachmentInline]
+    search_fields = ['author__username']
 
 class MediaTweetInline(admin.TabularInline):
     model = MediaTweet
@@ -15,8 +17,8 @@ class MediaTweetInline(admin.TabularInline):
 
 class TwitterArtistAdmin(admin.ModelAdmin):
     list_display = ('username', 'user_id', 'followers_count', 'profile_image_url')
+    readonly_fields = ('last_updated',)
     inlines = [MediaTweetInline]
-    list_filter = ['followers_count']
     search_fields = ['username']
 
 admin.site.register(TwitterArtist, TwitterArtistAdmin)

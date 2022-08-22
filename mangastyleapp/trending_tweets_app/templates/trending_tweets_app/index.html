@@ -32,7 +32,7 @@
 
         <div class="media-info-row">
           <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
-               onclick="window.open('{{ trending_tweet.tweet_url }}','mywindow');">
+               onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
         </div>
 
         <div class="media-info-row">
