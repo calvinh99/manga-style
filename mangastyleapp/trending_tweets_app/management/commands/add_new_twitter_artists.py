@@ -1,11 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 from trending_tweets_app.models import TwitterArtist
-from django.utils import timezone
 
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+import time
 import requests
 
 APP_DIR = Path(__file__).resolve().parent.parent.parent
@@ -71,8 +71,31 @@ def save_artist_data(user_data, update_existing=False):
 class Command(BaseCommand):
     help = "Fetch all data of users that mangastylebot is following using Twitter API."
 
+    def log_add(self, user_data):
+        try:
+            artist = TwitterArtist.objects.get(user_id=user_data['id'])
+            return 0
+        except TwitterArtist.DoesNotExist:
+            self.stdout.write("Adding artist {}".format(user_data['username']), ending=' ... ')
+            self.stdout.flush()
+            time.sleep(0.01)
+
+            try:
+                save_artist_data(user_data)
+                self.stdout.write(self.style.SUCCESS("Added artist {}.".format(user_data['username'])))
+                self.stdout.flush()
+                time.sleep(0.01)
+                return 1
+            except Exception as e:
+                self.stdout.write(self.style.ERROR("Error adding artist {}: {}".format(user_data['username'], e)))
+                self.stdout.flush()
+                time.sleep(0.01)
+                return 0
+
     def handle(self, *args, **options):
         following_data = get_who_user_is_following(mangastylebot_id)
+
+        n_added = 0
         for user_data in following_data:
-            save_artist_data(user_data)
-        self.stdout.write(self.style.SUCCESS('Successfully updated twitter artists.'))
+            n_added += self.log_add(user_data)
+        self.stdout.write(self.style.SUCCESS('Successfully added {} twitter artists.'.format(n_added)))

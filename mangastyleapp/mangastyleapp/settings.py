@@ -79,12 +79,19 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
             'read_default_file': str(BASE_DIR / 'my.cnf'),
-        },
+            # Tell MySQLdb to connect with 'utf8mb4' character set
+            "charset": "utf8mb4",
+            },
     },
     'sqlite3_db': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+     # Tell Django to build the test database with the 'utf8mb4' character set
+    "TEST": {
+        "CHARSET": "utf8mb4",
+        "COLLATION": "utf8mb4_unicode_ci",
+    },
 }
 
 

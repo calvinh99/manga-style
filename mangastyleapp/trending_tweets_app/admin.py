@@ -7,16 +7,17 @@ class MediaAttachmentInline(admin.TabularInline):
     extra = 1
 
 class MediaTweetAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'created_at',)
+    list_display = ('__str__', 'created_at' ,'likes_count', 'possibly_sensitive')
     inlines = [MediaAttachmentInline]
     search_fields = ['author__username']
+    list_filter = ('possibly_sensitive',)
 
 class MediaTweetInline(admin.TabularInline):
     model = MediaTweet
     extra = 1
 
 class TwitterArtistAdmin(admin.ModelAdmin):
-    list_display = ('username', 'user_id', 'followers_count', 'profile_image_url')
+    list_display = ('username', 'followers_count', 'last_updated')
     readonly_fields = ('last_updated',)
     inlines = [MediaTweetInline]
     search_fields = ['username']

@@ -36,6 +36,7 @@ class MediaTweet(models.Model):
     retweets_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(blank=False)
     lang = models.CharField(max_length=5, default='', blank=True)
+    possibly_sensitive = models.BooleanField(default=False, blank=True)
     author = models.ForeignKey(TwitterArtist, to_field='user_id', on_delete=models.CASCADE)
     
     def __str__(self):

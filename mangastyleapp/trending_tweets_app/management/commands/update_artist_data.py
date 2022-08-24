@@ -34,7 +34,7 @@ def get_recent_media_tweets(username):
            "?query=from%3A{}%20(has%3Amedia%20-is%3Aretweet%20-is%3Areply%20-is%3Aquote%20%20-has%3Avideos)"
            "&max_results=100"
            "&sort_order=recency"
-           "&tweet.fields=id,text,public_metrics,created_at,lang,attachments"
+           "&tweet.fields=id,text,public_metrics,created_at,lang,attachments,possibly_sensitive"
            "&expansions=attachments.media_keys,author_id"
            "&media.fields=media_key,type,url"
            "&user.fields=id,profile_image_url,public_metrics,username"
@@ -47,6 +47,7 @@ def save_tweet_data(tweet_data, artist):
         tweet.text = ''     # TODO: test out MySQL utf8mb4 for multi-language and emojis
         tweet.likes_count = tweet_data['public_metrics']['like_count']
         tweet.retweets_count = tweet_data['public_metrics']['retweet_count']
+        tweet.possibly_sensitive = tweet_data['possibly_sensitive']
         tweet.save()
     except MediaTweet.DoesNotExist:
         created_at = make_aware(datetime.strptime(tweet_data['created_at'], "%Y-%m-%dT%H:%M:%S.%fZ"))
@@ -56,6 +57,7 @@ def save_tweet_data(tweet_data, artist):
                            retweets_count=tweet_data['public_metrics']['retweet_count'],
                            created_at=created_at,
                            lang=tweet_data['lang'],
+                           possibly_sensitive=tweet_data['possibly_sensitive'],
                            author=artist)
         tweet.save()
     except Exception as e:
