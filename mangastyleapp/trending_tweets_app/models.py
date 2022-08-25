@@ -1,8 +1,7 @@
-import datetime
-
-from django.contrib import admin
 from django.db import models
 from django.utils import timezone
+
+import datetime
 
 class TwitterArtist(models.Model):
     user_id = models.CharField(max_length=40, unique=True, blank=False)
@@ -10,10 +9,18 @@ class TwitterArtist(models.Model):
     name = models.CharField(max_length=50, unique=False, default='', blank=True)
     followers_count = models.IntegerField(default=0)
     profile_image_url = models.URLField(max_length=200, default='', blank=True)
-    last_updated = models.DateTimeField(auto_now=True, blank=False)
+    last_updated = models.DateTimeField(blank=False)
     
     def __str__(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        """Override save method to init last_updated field to datetime.min upon creation."""
+        if not self.pk:
+            self.last_updated = datetime.datetime.min
+        else:
+            self.last_updated = timezone.now()
+        super(TwitterArtist, self).save(*args, **kwargs)
 
     def update_self_and_media_tweets(self):
         """
