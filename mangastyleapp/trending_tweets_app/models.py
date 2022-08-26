@@ -22,20 +22,6 @@ class TwitterArtist(models.Model):
             self.last_updated = timezone.now()
         super(TwitterArtist, self).save(*args, **kwargs)
 
-    def update_self_and_media_tweets(self):
-        """
-        Gets recent media tweets (at max 7 days ago) and 
-        user data (followers, profile_image_url, last_updated, etc.) 
-        using twitter recent search API request. Store returned 
-        tweets and updated user data and save to database.
-
-        Get created_at of most recent MediaTweet. If older 
-        than one week, then set start_time to one week ago, 
-        otherwise, set start_time to most recent MediaTweet's
-        created_at datetime.
-        """
-        print("Yet to be Implemented")
-
 class MediaTweet(models.Model):
     tweet_id = models.CharField(max_length=40, unique=True, blank=False)
     text = models.URLField(max_length=560, unique=False, default='', blank=True)
@@ -49,12 +35,6 @@ class MediaTweet(models.Model):
     def __str__(self):
         return self.author.username + " tweeted at " + self.created_at.strftime("%Y-%m-%d")
 
-    def get_media_urls(self):
-        """
-        Gets media urls from Media objects in one-to-many relation.
-        """
-        print("Yet to be Implemented")
-
 class MediaAttachment(models.Model):
     media_id = models.CharField(max_length=40, unique=True, blank=False)
     media_url = models.URLField(max_length=200, unique=True, blank=False)
@@ -64,10 +44,3 @@ class MediaAttachment(models.Model):
     
     def __str__(self):
         return self.parent_tweet.author.username + " " + self.media_url
-
-    def get_style_classified(self):
-        """
-        Calls our ML Model microservice to classify as 'mangastyle', 
-        'fudastyle', 'nsfw', etc.
-        """
-        print("Yet to be Implemented")

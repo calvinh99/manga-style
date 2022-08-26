@@ -56,7 +56,7 @@ class Command(BaseCommand):
             n_added = 0
             for user_data in following_data:
                 n_added += self.log_add(user_data)
-            self.print_flush(self.style.SUCCESS('Successfully added {} twitter artists.'.format(n_added)))
+            self.print_flush(self.style.SUCCESS(f'Successfully added {n_added} twitter artists.'))
 
         if options['delete']:
             following_ids = set(user_data['id'] for user_data in following_data)
@@ -65,4 +65,4 @@ class Command(BaseCommand):
             for artist in TwitterArtist.objects.all():
                 if artist.user_id not in following_ids:
                     n_deleted += self.log_delete(artist)
-            self.print_flush(self.style.SUCCESS('Successfully deleted {} twitter artists.'.format(n_deleted)))
+            self.print_flush(self.style.SUCCESS(f'Successfully deleted {n_deleted} twitter artists.'))
