@@ -36,16 +36,68 @@ class Command(BaseCommand):
         self.stdout.write(text, ending=ending)
         self.stdout.flush()
         time.sleep(0.01)
-    
-    def log_update(self, username):
-        self.print_flush("Updating artist {}".format(username), ending=' ... ')
+        
+    def log_update(self, usernames):
+        self.print_flush("Updating group of users", ending=' ... \n')
         try:
-            result_count = twitter_api.update_artist_tweet_media(username)
-            self.print_flush(self.style.SUCCESS("Updated artist {} with {} tweets."
-                                                .format(username, result_count)))
-            return 1
+            # 1. Get json response
+            json_response = twitter_api.get_recent_media_tweets(usernames)
+            
+            # 2. If no results, warn and save
+            if json_response['meta']['result_count'] == 0:
+                self.print_flush(self.style.WARNING(f"None of users: {usernames} posted in the past 7 days!"))
+                for artist in TwitterArtist.objects.filter(username__in=usernames):
+                    artist.save()
+                return 0
+            
+            # 2. Create mappings for fast search
+            map_username_to_data = {user_data['username']:user_data
+                                    for user_data in json_response['includes']['users']}
+            
+            map_author_id_to_tweets = dict()
+            for tweet_data in json_response['data']:
+                map_author_id_to_tweets.setdefault(tweet_data['author_id'],[]).append(tweet_data)
+            
+            map_media_key_to_data = {media_data['media_key']: media_data 
+                                     for media_data in json_response['includes']['media']}
+            
+            del json_response # don't need this anymore
+
+            # 3. For each user
+            n_updated = 0
+            for username in usernames:
+                self.print_flush(f"    Updating {username}...", ending=' ... ')
+                try:
+                    tweets_updated = 0
+                    
+                    if user_data := map_username_to_data.get(username): # := requires Python 3.8 or later
+                        artist = twitter_api.save_artist_data(user_data)
+
+                        # 4. For each tweet
+                        if tweets := map_author_id_to_tweets.get(artist.user_id):
+                            for tweet_data in tweets:
+                                tweet = twitter_api.save_tweet_data(tweet_data, artist)
+
+                                # 5. For each media attachment
+                                media_keys = tweet_data['attachments']['media_keys']
+                                for media_key in media_keys:
+                                    media_data = map_media_key_to_data[media_key]
+                                    twitter_api.save_media_data(media_data, tweet)
+                                
+                                tweets_updated += 1
+                    else: # if no new tweets from user, call save() to update last_updated
+                        artist = TwitterArtist.objects.get(username=username)
+                        artist.save()
+                    self.print_flush(self.style.SUCCESS(f"Updated artist {username} with ")
+                                     + self.style.MIGRATE_HEADING(f"{tweets_updated}")
+                                     + self.style.SUCCESS(" tweets."))
+                    n_updated += 1
+                except Exception as e:
+                    self.print_flush(self.style.ERROR(f"Error updating {username}: {e}"))
+            
+            return n_updated
         except Exception as e:
-            self.print_flush(self.style.ERROR("Error updating artist {}: {}".format(username, e)))
+            self.print_flush(self.style.ERROR(f"Error updating group: {usernames}"))
             return 0
 
     def handle(self, *args, **options):
@@ -62,11 +114,22 @@ class Command(BaseCommand):
             self.print_flush("Updating all artists", ending='\n{}\n'.format('-'*40))
 
             n_updated = 0
+            query_usernames = []
             for artist in TwitterArtist.objects.all().order_by('last_updated'):
-                if artist.last_updated > dt_checkpoint: # if more recent
+                # If reached end, update artists in query_usernames
+                if artist.last_updated >= dt_checkpoint:
+                    if len(query_usernames) > 0:
+                        n_updated += self.log_update(query_usernames)
                     self.print_flush(self.style.WARNING(f"Finished updating artists up till checkpoint: {dt_checkpoint}."))
                     break
-                n_updated += self.log_update(artist.username)
+
+                # Update when query reaches just under 512 characters (Twitter API limit)
+                query_usernames.append(artist.username)
+                if len(query_usernames) >= 19:
+                    query = twitter_api.create_search_query(query_usernames)
+                    if twitter_api.get_query_length(query) + 24 > 512: # can't add any more users
+                        n_updated += self.log_update(query_usernames)
+                        query_usernames.clear()
 
             self.print_flush(self.style.SUCCESS(f"Updated {n_updated}/{TwitterArtist.objects.count()} artists."))
         else:

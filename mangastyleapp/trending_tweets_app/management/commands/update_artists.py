@@ -19,6 +19,11 @@ class Command(BaseCommand):
             action='store_true',
             help='Delete artists that are no longer followed.',
         )
+        parser.add_argument(
+            '--color',
+            action='store_true',
+            help='Test colors.',
+        )
 
     def print_flush(self, text, ending='\n'):
         self.stdout.write(text, ending=ending)
@@ -50,6 +55,10 @@ class Command(BaseCommand):
             return 0
 
     def handle(self, *args, **options):
+        if options['color']:
+            self.print_flush(self.style.SUCCESS("Updated artist test__lol with ") + self.style.MIGRATE_HEADING("8 tweets"))
+            return
+            
         following_data = twitter_api.get_who_user_is_following(twitter_api.mangastylebot_id)
 
         if options['add']:

@@ -73,17 +73,49 @@ def get_who_user_is_following(user_id):
     
     return total_json
 
-def get_recent_media_tweets(username):
+def create_search_query(usernames: list):
+    query = f"(from%3A{usernames[0]}" # `%3A` is url encoding for `:` and `%20` is ` `    
+    for username in usernames[1:]:
+        query += f"%20OR%20from%3A{username}" # ` OR from:{username}`
+    query += ")%20-is%3Aretweet%20-is%3Areply%20-is%3Aquote%20has%3Aimages"
+    
+    return query
+
+def get_query_length(query):
+    return len(query) - query.count('%')*2 # url encodings only count for 1 char
+
+def create_get_search_url(usernames, next_token=None):
     url = ("https://api.twitter.com/2/tweets/search/recent"
-           "?query=from%3A{}%20(has%3Amedia%20-is%3Aretweet%20-is%3Areply%20-is%3Aquote%20%20-has%3Avideos)"
-           "&max_results=100"
+           f"?query={create_search_query(usernames)}"
+           "&max_results=10"
            "&sort_order=recency"
            "&tweet.fields=id,text,public_metrics,created_at,lang,attachments,possibly_sensitive"
            "&expansions=attachments.media_keys,author_id"
            "&media.fields=media_key,type,url"
-           "&user.fields=id,profile_image_url,public_metrics,username"
-           .format(username))
-    return get_request(url)
+           "&user.fields=id,profile_image_url,public_metrics,username")
+    if next_token:
+        url += "&pagination_token={}".format(next_token)
+    return url
+
+def get_recent_media_tweets(usernames):
+    # 1. Get initial response
+    url = create_get_search_url(usernames)
+    json_resp = get_request(url)
+    
+    # 2. Initialize total
+    total_json = json_resp.copy()
+    
+    # 3. Iterate for each page and add its data to total
+    next_token = json_resp['meta'].get('next_token', None)
+    while next_token:
+        url = create_get_search_url(usernames, next_token=next_token)
+        json_resp = get_request(url)
+        total_json['data'] += json_resp['data']
+        total_json['includes']['media'] += json_resp['includes']['media']
+        total_json['includes']['users'] += json_resp['includes']['users']
+        next_token = json_resp['meta'].get('next_token', None)
+    
+    return total_json
 
 def save_artist_data(user_data):
     try:
@@ -133,36 +165,3 @@ def save_media_data(media_data, tweet):
         return media
     except Exception as e:
         raise CommandError('Something went wrong for media {}: {}'.format(media_data['url'], e))
-
-def update_artist_tweet_media(username):
-    try:
-        # 1. Send request to twitter api
-        json_response = get_recent_media_tweets(username)
-        result_count = json_response['meta']['result_count']
-
-        # 2. If no recent tweets, call save and return 0
-        if result_count == 0:
-            artist = TwitterArtist.objects.get(username=username)
-            artist.save()
-            return result_count
-
-        # 3. If recent tweets, update artist data
-        artist = save_artist_data(json_response['includes']['users'][0])
-
-        # 4. Map media key to media data like url, type
-        media_id_map = {media_dict['media_key']: media_dict 
-                        for media_dict in json_response['includes']['media']}
-
-        # 5. Save each tweet and its attached media
-        for tweet_data in json_response['data']:
-            tweet = save_tweet_data(tweet_data, artist)
-
-            media_ids = tweet_data['attachments']['media_keys']
-            for media_id in media_ids:
-                media_data = media_id_map[media_id]
-                save_media_data(media_data, tweet)
-        
-        # 6. Return number of tweets saved
-        return result_count
-    except ValueError as ve:
-        raise CommandError("Error {} for artist {}.".format(ve, username))
