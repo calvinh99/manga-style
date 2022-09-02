@@ -3,12 +3,14 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     column-gap: 20px;
     row-gap: 30px;
+    justify-content: center;
 }
 
 .media-card {
     color: rgb(113, 118, 123);
     font-size: 14px;
     overflow: default;
+    white-space: nowrap;
 
     display: flex;
     flex-direction: column;

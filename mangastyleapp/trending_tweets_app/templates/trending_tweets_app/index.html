@@ -12,26 +12,47 @@
   <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/twitter-images.css' %}">
   <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/twitter-artist.css' %}">
   <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/ranks.css' %}">
+  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/navigation.css' %}">
   <head>
     <meta charset="utf-8">
     <title>mangastyle</title>
   </head>
   <body>
+    <script>
+      function aspectRatioConstraints(img) {
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        if (aspectRatio < 3/4) {
+            img.style.aspectRatio = '3/4';
+        }
+        else if (aspectRatio > 2) {
+            img.style.aspectRatio = '2/1';
+        }
+      }
+    </script>
+
     <div class="header">
       <div class="hamburger-icon"></div>
       <div class="discord-icon"></div>
     </div>
 
+    <div class="navigation-box">
+      <div class="page-navigation-box" id="page-navigation-box">
+      </div>
+    </div>
+
     <div class="media-grid">
-      {% for trending_tweet in top_25_trending_media_tweets %}
+      {% for trending_tweet in trending_tweets %}
       <div class="media-card">
         <div class="artist-row">
           <img class="artist-profile-image" src="{{ trending_tweet.author.profile_image_url }}">
-          <div class="artist-username">@{{ trending_tweet.author.username }} &#183; {{ trending_tweet.created_at|date:"M j" }}</div>
+          <div class="artist-name">{{ trending_tweet.author.name }}</div>
+          <div class="artist-username">@{{ trending_tweet.author.username }} &#183; {{ trending_tweet.created_at|tweet_time_since }}</div>
+          <!-- date:"M j" -->
         </div>
 
         <div class="media-info-row">
           <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
+               onload="aspectRatioConstraints(this);"
                onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
         </div>
 
@@ -49,5 +70,95 @@
       </div>
       {% endfor %}
     </div>
+
+    <script>
+      // View
+      const pageNavigationBox = document.getElementById('page-navigation-box');
+
+      const num_pages = {{num_pages}};
+      const current_page = {{current_page}};
+
+      function addPageButton(pageNumber) {
+        const pageButton = document.createElement('button');
+        pageButton.classList.add('page-button');
+        if (pageNumber === current_page) {
+          pageButton.style.backgroundColor = 'rgb(220, 160, 80)';
+        }
+        pageButton.innerText = pageNumber;
+        pageNavigationBox.appendChild(pageButton);
+        pageButton.addEventListener('click', function() {
+          window.location.href = '?page=' + this.innerText;
+        });
+      }
+
+      function addArrowPageButton(arrowText)  {
+        const arrowPageButton = document.createElement('button');
+        arrowPageButton.classList.add('arrow-page-button');
+        arrowPageButton.innerText = arrowText;
+        pageNavigationBox.appendChild(arrowPageButton);
+        if (arrowPageButton.innerText === '<') {
+          arrowPageButton.addEventListener('click', function() {
+            if (current_page > 1) {
+              window.location.href = '?page=' + (current_page - 1);
+            }
+          });
+        } else if (arrowPageButton.innerText === '>') {
+          arrowPageButton.addEventListener('click', function() {
+            if (current_page < num_pages) {
+              window.location.href = '?page=' + (current_page + 1);
+            }
+          });
+        }
+      }
+
+      function addEllipses() {
+        const ellipses = document.createElement('div');
+        ellipses.classList.add('ellipses');
+        ellipses.innerText = '...';
+        pageNavigationBox.appendChild(ellipses);
+      }
+
+      // Controller
+      function addPageButtons(pageNumber) {
+        if (num_pages <= 7) {
+          for (let i = 1; i <= num_pages; i++) {
+            addPageButton(i);
+          }
+          return
+        }
+        addPageButton(1);
+        // handle middle 4 or 5 pages
+        if (current_page  === 1 || current_page === num_pages) {
+          addPageButton(2);
+          addPageButton(3);
+          addEllipses();
+          addPageButton(num_pages-2);
+          addPageButton(num_pages-1);
+        } else if (current_page <= 4) {
+          for (let i = 2; i <= 6; i++) {
+            addPageButton(i);
+          }
+          addEllipses();
+        } else if (current_page >= num_pages - 3) {
+          addEllipses();
+          for (let i = num_pages - 5; i <= num_pages-1; i++) {
+            addPageButton(i);
+          }
+        } else {
+          addEllipses();
+          for (let i = current_page - 2; i <= current_page + 2; i++) {
+            addPageButton(i);
+          }
+          addEllipses();
+        }
+
+        addPageButton(num_pages);
+      }
+
+      addArrowPageButton('<');
+      addPageButtons();
+      addArrowPageButton('>');
+    </script>
+    <!-- <script src="{% static 'trending_tweets_app/scripts/twitter-images.js' %}"></script> -->
   </body>
 </html>

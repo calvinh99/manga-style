@@ -1,0 +1,1 @@
+console.log("This might be slower than just including the js script in the html.");

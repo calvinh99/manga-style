@@ -1,4 +1,6 @@
 from django import template
+from django.utils.timesince import timesince
+from django.utils.translation import ngettext_lazy
 
 register = template.Library()
 
@@ -8,6 +10,19 @@ def thousands_separator(num):
 
 def truncate_zero_decimal(num):
     return int(num) if num < int(num) + 0.1 else int(num * 10) / 10
+
+@register.filter(name='tweet_time_since')
+def tweet_time_since(value):
+    time_strings = {
+        "year": ngettext_lazy("%(num)d year", "%(num)d years", "num"),
+        "month": ngettext_lazy("%(num)d month", "%(num)d months", "num"),
+        "week": ngettext_lazy("%(num)dw", "%(num)dw", "num"),
+        "day": ngettext_lazy("%(num)dd", "%(num)dd", "num"),
+        "hour": ngettext_lazy("%(num)dh", "%(num)dh", "num"),
+        "minute": ngettext_lazy("%(num)dm", "%(num)dm", "num"),
+    }
+    timesince_str = timesince(value, time_strings=time_strings).replace(',', '')
+    return timesince_str
 
 @register.filter(name='abbreviate_num')
 def abbreviate_num(value):
