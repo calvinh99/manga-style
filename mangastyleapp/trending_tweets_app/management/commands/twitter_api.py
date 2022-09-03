@@ -158,8 +158,8 @@ def save_media_data(media_data, tweet):
             defaults={
                 'media_url': media_data['url'],
                 'media_type': media_data['type'],
-                'media_style': '',
                 'parent_tweet': tweet,
+                'training_data': False,
             }
         )
         return media

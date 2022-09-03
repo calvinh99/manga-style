@@ -39,7 +39,8 @@ class MediaAttachment(models.Model):
     media_id = models.CharField(max_length=40, unique=True, blank=False)
     media_url = models.URLField(max_length=200, unique=True, blank=False)
     media_type = models.CharField(max_length=10)
-    media_style = models.CharField(max_length=10, default='')
+    style = models.SmallIntegerField(default=-1, blank=True)
+    training_data = models.BooleanField(default=False, blank=False)
     parent_tweet = models.ForeignKey(MediaTweet, to_field='tweet_id', on_delete=models.CASCADE)
     
     def __str__(self):
