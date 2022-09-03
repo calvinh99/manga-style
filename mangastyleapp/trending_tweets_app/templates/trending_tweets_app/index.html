@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/twitter-artist.css' %}">
   <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/ranks.css' %}">
   <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/navigation.css' %}">
+  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/filter-dropdown.css' %}">
   <head>
     <meta charset="utf-8">
     <title>mangastyle</title>
@@ -32,7 +33,17 @@
 
     <div class="header">
       <div class="hamburger-icon"></div>
-      <div class="discord-icon"></div>
+      <div class="header-right">
+        <div class="filter-button-container">
+          <button class="filter-button" onclick="toggleFilterDropdown();">Filter</button>
+          <div id="filter-dropdown-container" class="filter-dropdown-container">
+            <div id="filter-dropdown-menu" class="filter-dropdown-menu">
+            </div>
+            <button class="filter-apply-button" onclick="applyFilters();">Apply</button>
+          </div>
+        </div>
+        <div class="discord-icon"></div>
+      </div>
     </div>
 
     <div class="navigation-box">
@@ -72,8 +83,52 @@
     </div>
 
     <script>
+      // Model
+      const filterDict = {
+        'days': {
+          'filterTitle': 'How many days ago',
+          'filterValues': ['1', '2', '3', '4', '5', '6', '7'],
+          'radioDirection': 'row',
+          'checkedValue': '7'
+        },
+        'minfollowers': {
+          'filterTitle': 'Minimum user followers',
+          'filterValues': ['None', '1K', '10K', '100K', '1M'],
+          'radioDirection': 'row',
+          'checkedValue': 'None'
+        },
+        'maxfollowers': {
+          'filterTitle': 'Maximum user followers',
+          'filterValues': ['1K', '10K', '100K', '1M', 'None'],
+          'radioDirection': 'row',
+          'checkedValue': 'None'
+        },
+        'minlikes': {
+          'filterTitle': 'Minimum likes',
+          'filterValues': ['None', '1K', '10K', '100K', '1M'],
+          'radioDirection': 'row',
+          'checkedValue': 'None'
+        },
+        'style': {
+          'filterTitle': 'Art Style',
+          'filterValues': ['All', 'MangaColor', 'MangaInk', 'Sketch', 'Fusion', 'Hentai'],
+          'radioDirection': 'column',
+          'checkedValue': 'All'
+        }
+      };
+
+      function updateSearchQuery(queries) {
+        const searchParams = new URLSearchParams(window.location.search);
+        for (const [key, value] of Object.entries(queries)) {
+          searchParams.set(key, value);
+        }
+        window.location.search = searchParams.toString();
+      }
+
       // View
       const pageNavigationBox = document.getElementById('page-navigation-box');
+      const filterDropdownContainer = document.getElementById('filter-dropdown-container');
+      const filterDropdownMenu = document.getElementById('filter-dropdown-menu');
 
       const num_pages = {{num_pages}};
       const current_page = {{current_page}};
@@ -87,7 +142,7 @@
         pageButton.innerText = pageNumber;
         pageNavigationBox.appendChild(pageButton);
         pageButton.addEventListener('click', function() {
-          window.location.href = '?page=' + this.innerText;
+          updateSearchQuery({'page': pageNumber});
         });
       }
 
@@ -118,7 +173,6 @@
         pageNavigationBox.appendChild(ellipses);
       }
 
-      // Controller
       function addPageButtons(pageNumber) {
         if (num_pages <= 7) {
           for (let i = 1; i <= num_pages; i++) {
@@ -155,9 +209,83 @@
         addPageButton(num_pages);
       }
 
+      function addFilterBox(filterTitle, filterValues, radioName, radioDirection, checkedValue) {
+        const filterBox = document.createElement('div');
+        filterBox.classList.add('filter-box');
+
+        const filterTitleDiv = document.createElement('div');
+        filterTitleDiv.classList.add('filter-title');
+        filterTitleDiv.innerText = filterTitle;
+        filterBox.appendChild(filterTitleDiv);
+
+        const filterRadioGroup = document.createElement('div');
+        filterRadioGroup.classList.add('filter-radio-group');
+        filterRadioGroup.style.flexDirection = radioDirection;
+
+        filterValues.forEach(filterValue => {
+          const filterRadioBox = document.createElement('div');
+          filterRadioBox.classList.add('filter-radio-box');
+          const filterRadioButton = document.createElement('input');
+          filterRadioButton.type = 'radio';
+          filterRadioButton.name = radioName;
+          filterRadioButton.value = filterValue;
+          if (filterValue === checkedValue) {
+            filterRadioButton.checked = true;
+          }
+          const filterRadioLabel = document.createElement('label');
+          filterRadioLabel.htmlFor = filterValue;
+          filterRadioLabel.innerText = filterValue;
+
+          filterRadioBox.appendChild(filterRadioButton);
+          filterRadioBox.appendChild(filterRadioLabel);
+          filterRadioGroup.appendChild(filterRadioBox);
+        });
+
+        filterBox.appendChild(filterRadioGroup);
+        filterDropdownMenu.appendChild(filterBox);
+      }
+
+      // Controller
+ 
+      function toggleFilterDropdown() {
+        filterDropdownContainer.classList.toggle("show");
+      }
+
+      function applyFilters() {
+        const queries = {'page': 1};
+        for (const [filterName, filterProperties] of Object.entries(filterDict)) {
+          checkedValue = document.querySelector(`input[name=${filterName}]:checked`).value;
+          if (checkedValue !== 'None') {
+            queries[filterName] = checkedValue;
+          }
+        }
+        updateSearchQuery(queries);
+      }
+
+      dropdownSelectors = ['.filter-button', '.filter-dropdown-menu', '.filter-dropdown-menu *'];
+      window.onclick = (event) => {
+        if (!event.target.matches(dropdownSelectors)) {
+          if (filterDropdownContainer.classList.contains('show')) {
+            filterDropdownContainer.classList.remove('show');
+          }
+        }
+      }
+      // Implementation
       addArrowPageButton('<');
       addPageButtons();
       addArrowPageButton('>');
+
+      for (const [filterName, filterProperties] of Object.entries(filterDict)) {
+        let checkedValue = new URLSearchParams(window.location.search).get(filterName);
+        if (checkedValue == null) {
+          checkedValue = filterProperties['checkedValue'];
+        }
+        addFilterBox(filterProperties['filterTitle'], 
+                     filterProperties['filterValues'], 
+                     filterName, 
+                     filterProperties['radioDirection'], 
+                     checkedValue);
+      }
     </script>
     <!-- <script src="{% static 'trending_tweets_app/scripts/twitter-images.js' %}"></script> -->
   </body>

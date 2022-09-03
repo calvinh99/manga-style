@@ -13,6 +13,7 @@
 }
 
 .hamburger-icon {
+    min-width: 24px;
     background-color: lightpink;
     width: 24px;
     height: 24px;
@@ -20,10 +21,25 @@
     margin-left: 20px;
 }
 
+.header-right {
+    min-width: fit-content;
+    width: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 40px;
+}
+
+.filter-button-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .discord-icon {
     background-color: lightblue;
     width: 32px;
     height: 32px;
     border-radius: 16px;
-    margin-right: 20px;
 }

@@ -24,7 +24,7 @@ class TwitterArtist(models.Model):
 
 class MediaTweet(models.Model):
     tweet_id = models.CharField(max_length=40, unique=True, blank=False)
-    text = models.URLField(max_length=560, unique=False, default='', blank=True)
+    text = models.CharField(max_length=560, unique=False, default='', blank=True)
     likes_count = models.IntegerField(default=0)
     retweets_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(blank=False)
