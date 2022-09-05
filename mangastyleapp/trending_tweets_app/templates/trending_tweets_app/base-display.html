@@ -55,41 +55,10 @@
 
     {% block postload_scripts %}
     <script>
-      const num_pages = {{num_pages}};
-      const current_page = {{current_page}};
+      const num_pages = {{ num_pages }};
+      const current_page = {{ current_page }};
 
-      const filterDict = {
-        'days': {
-          'filterTitle': 'How many days ago',
-          'filterValues': ['1', '2', '3', '4', '5', '6', '7'],
-          'radioDirection': 'row',
-          'checkedValue': '1'
-        },
-        'minfollowers': {
-          'filterTitle': 'Minimum user followers',
-          'filterValues': ['None', '1K', '10K', '100K', '1M'],
-          'radioDirection': 'row',
-          'checkedValue': 'None'
-        },
-        'maxfollowers': {
-          'filterTitle': 'Maximum user followers',
-          'filterValues': ['1K', '10K', '100K', '1M', 'None'],
-          'radioDirection': 'row',
-          'checkedValue': 'None'
-        },
-        'minlikes': {
-          'filterTitle': 'Minimum likes',
-          'filterValues': ['None', '1K', '10K', '100K', '1M'],
-          'radioDirection': 'row',
-          'checkedValue': 'None'
-        },
-        'style': {
-          'filterTitle': 'Art Style',
-          'filterValues': ['All', 'MangaColor', 'MangaInk', 'Sketch', 'Fusion', 'Hentai'],
-          'radioDirection': 'column',
-          'checkedValue': 'All'
-        }
-      };
+      const filterDict = JSON.parse('{{ filters|safe  }}');
     </script>
     <script src="{% static 'trending_tweets_app/scripts/filter-dropdown.js' %}"></script>
     <script src="{% static 'trending_tweets_app/scripts/page-navigation.js' %}"></script>

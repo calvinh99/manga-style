@@ -21,9 +21,11 @@ function updateSearchQuery(queries) {
 // update the query string in url with checked filters
 function applyFilters() {
     const queries = {'page': 1};
-    for (const [filterName, filterProperties] of Object.entries(filterDict)) { //TODO: only need filterName so can use Object.keys
-        checkedValue = document.querySelector(`input[name=${filterName}]:checked`).value;
-        queries[filterName] = checkedValue;
+    for (const filterName of Object.keys(filterDict)) {
+        checkedRadio = document.querySelector(`input[name=${filterName}]:checked`).value;
+        if (checkedRadio !== 'None') {  // so you don't add a query string for None
+            queries[filterName] = checkedRadio;
+        }
     }
     updateSearchQuery(queries);
 }

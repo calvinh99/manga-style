@@ -67,14 +67,15 @@ window.onclick = (event) => {
 
 // Implementation
 for (const [filterName, filterProperties] of Object.entries(filterDict)) {
-    let checkedValue = new URLSearchParams(window.location.search).get(filterName);
-    if (checkedValue == null) {
-        checkedValue = filterProperties['checkedValue'];
+    let radioToCheck = new URLSearchParams(window.location.search).get(filterName); // TODO: test if you edit search param to a non valid value
+    const radioValues = Object.keys(filterProperties['filterValues'])
+    if (radioToCheck == null || !radioValues.includes(radioToCheck)) {
+        radioToCheck = filterProperties['radioToCheck'];
     }
 
     addFilterBox(filterProperties['filterTitle'], 
-                 filterProperties['filterValues'], 
-                 filterName, 
+                 radioValues, 
+                 filterProperties['radioName'], 
                  filterProperties['radioDirection'], 
-                 checkedValue);
+                 radioToCheck);
 }
