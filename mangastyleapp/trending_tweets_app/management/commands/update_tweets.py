@@ -8,6 +8,9 @@ from django.utils.timezone import make_aware
 
 from . import twitter_api
 
+import logging
+log = logging.getLogger(__name__)
+
 dt_checkpoint_path = twitter_api.CURR_DIR / 'dt_checkpoint.txt'
 
 def save_dt_checkpoint(dt_checkpoint):
@@ -116,15 +119,15 @@ class Command(BaseCommand):
             n_updated = 0
             query_usernames = []
             for artist in TwitterArtist.objects.all().order_by('last_updated'):
+                query_usernames.append(artist.username)
+
                 # If reached end, update artists in query_usernames
                 if artist.last_updated >= dt_checkpoint:
-                    if len(query_usernames) > 0:
-                        n_updated += self.log_update(query_usernames)
+                    n_updated += self.log_update(query_usernames)
                     self.print_flush(self.style.WARNING(f"Finished updating artists up till checkpoint: {dt_checkpoint}."))
                     break
 
                 # Update when query reaches just under 512 characters (Twitter API limit)
-                query_usernames.append(artist.username)
                 if len(query_usernames) >= 19:
                     query = twitter_api.create_search_query(query_usernames)
                     if twitter_api.get_query_length(query) + 24 > 512: # can't add any more users
@@ -133,5 +136,4 @@ class Command(BaseCommand):
 
             self.print_flush(self.style.SUCCESS(f"Updated {n_updated}/{TwitterArtist.objects.count()} artists."))
         else:
-            for username in options['usernames']:
-                self.log_update(username)
+            self.log_update(options['usernames'])

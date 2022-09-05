@@ -49,7 +49,7 @@ def tweets(request):
     #       multiple media attachments where even one is not art.
     tweets_query = MediaTweet.objects.filter(~Q(mediaattachment__style=9999))
 
-    days = 7
+    days = 1
     if request.GET.get('days'):
         try:
             days = int(request.GET.get('days'))

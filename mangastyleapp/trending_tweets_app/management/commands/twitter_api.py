@@ -35,6 +35,7 @@ def bearer_oauth(r):
 
 def get_request(url):
     response = requests.get(url, auth=bearer_oauth)
+    log.warning(f"Remaining Requests: {response.headers.get('x-rate-limit-remaining')}")
     if response.status_code == 200:
         return response.json()
     elif response.status_code == 429:
@@ -87,7 +88,7 @@ def get_query_length(query):
 def create_get_search_url(usernames, next_token=None):
     url = ("https://api.twitter.com/2/tweets/search/recent"
            f"?query={create_search_query(usernames)}"
-           "&max_results=10"
+           "&max_results=100"
            "&sort_order=recency"
            "&tweet.fields=id,text,public_metrics,created_at,lang,attachments,possibly_sensitive"
            "&expansions=attachments.media_keys,author_id"

@@ -1,3 +1,10 @@
+.rank-container {
+    color: rgb(244, 244, 244);
+    font-weight: 500;
+    padding-left: 6px;
+    padding-right: 4px;
+}
+
 .likes-count-row {
     display: flex;
     flex-direction: row;
@@ -10,12 +17,4 @@
 .likes-icon-container {
     margin-right: 8px;
     margin-top: 2px;
-}
-
-.likes-icon-svg {
-    width: 15px;
-    height: 15px;
-    stroke: rgb(113, 118, 123);
-    stroke-width: 0.5px;
-    fill: rgb(113, 118, 123);
 }

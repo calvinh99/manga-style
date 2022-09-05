@@ -1,292 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-  {% load static %}
-  {% load trending_tweets_app_extras %}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"> 
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/main.css' %}">
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/header.css' %}">
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/media-cards.css' %}">
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/likes.css' %}">
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/twitter-images.css' %}">
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/twitter-artist.css' %}">
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/ranks.css' %}">
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/navigation.css' %}">
-  <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/filter-dropdown.css' %}">
-  <head>
-    <meta charset="utf-8">
-    <title>mangastyle</title>
-  </head>
-  <body>
-    <script>
-      function aspectRatioConstraints(img) {
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
-        if (aspectRatio < 3/4) {
-            img.style.aspectRatio = '3/4';
-        }
-        else if (aspectRatio > 2) {
-            img.style.aspectRatio = '2/1';
-        }
-      }
-    </script>
+{% extends 'trending_tweets_app/base-display.html' %}
 
-    <div class="header">
-      <div class="hamburger-icon"></div>
-      <div class="header-right">
-        <div class="filter-button-container">
-          <button class="filter-button" onclick="toggleFilterDropdown();">Filter</button>
-          <div id="filter-dropdown-container" class="filter-dropdown-container">
-            <div id="filter-dropdown-menu" class="filter-dropdown-menu">
-            </div>
-            <button class="filter-apply-button" onclick="applyFilters();">Apply</button>
-          </div>
-        </div>
-        <div class="discord-icon"></div>
+{% load trending_tweets_app_extras %}
+
+{% block title %}mangastyle{% endblock title %}
+
+{% block header_right %}
+{{ block.super }}
+<div class="discord-icon" onclick="window.open('https://discord.gg/WQTSVas9mJ');">
+  <svg class="discord-icon-svg" viewBox="0 0 640 512"
+      xmlns="http://www.w3.org/2000/svg">
+    <path d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C623.729,277.594,590.933,167.465,524.531,69.836ZM222.491,337.58c-28.972,0-52.844-26.587-52.844-59.239S193.056,219.1,222.491,219.1c29.665,0,53.306,26.82,52.843,59.239C275.334,310.993,251.924,337.58,222.491,337.58Zm195.38,0c-28.971,0-52.843-26.587-52.843-59.239S388.437,219.1,417.871,219.1c29.667,0,53.307,26.82,52.844,59.239C470.715,310.993,447.538,337.58,417.871,337.58Z"></path>
+  </svg>
+</div>
+{% endblock header_right %}
+
+{% block media_cards %}
+{% for trending_tweet in trending_tweets %}
+<div class="media-card">
+  <div class="artist-row">
+    <img class="artist-profile-image" src="{{ trending_tweet.author.profile_image_url }}">
+    <div class="artist-name">{{ trending_tweet.author.name }}</div>
+    <div class="artist-username">@{{ trending_tweet.author.username }} &#183; {{ trending_tweet.created_at|tweet_time_since }}</div>
+  </div>
+
+  <div class="media-info-row">
+    <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
+          onload="aspectRatioConstraints(this);"
+          onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
+  </div>
+
+  <div class="media-info-row">
+    <div class="rank-container">Rank {{ forloop.counter|add:rank_increment }}</div>
+    <div class="likes-count-row">
+      <div class="likes-icon-container">
+        <svg class="likes-icon-svg" viewBox="0 0 24 24">
+          <path d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z"></path>
+        </svg>
       </div>
+      <div class="likes-count">{{ trending_tweet.likes_count|abbreviate_num }}</div>
     </div>
-
-    <div class="navigation-box">
-      <div class="page-navigation-box" id="page-navigation-box">
-      </div>
-    </div>
-
-    <div class="media-grid">
-      {% for trending_tweet in trending_tweets %}
-      <div class="media-card">
-        <div class="artist-row">
-          <img class="artist-profile-image" src="{{ trending_tweet.author.profile_image_url }}">
-          <div class="artist-name">{{ trending_tweet.author.name }}</div>
-          <div class="artist-username">@{{ trending_tweet.author.username }} &#183; {{ trending_tweet.created_at|tweet_time_since }}</div>
-          <!-- date:"M j" -->
-        </div>
-
-        <div class="media-info-row">
-          <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
-               onload="aspectRatioConstraints(this);"
-               onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
-        </div>
-
-        <div class="media-info-row">
-          <div class="rank-container">Rank {{ forloop.counter|add:rank_increment }}</div>
-          <div class="likes-count-row">
-            <div class="likes-icon-container">
-              <svg class="likes-icon-svg" viewBox="0 0 24 24">
-                <path d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z"></path>
-              </svg>
-            </div>
-            <div class="likes-count">{{ trending_tweet.likes_count|abbreviate_num }}</div>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-
-    <script>
-      // Model
-      const filterDict = {
-        'days': {
-          'filterTitle': 'How many days ago',
-          'filterValues': ['1', '2', '3', '4', '5', '6', '7'],
-          'radioDirection': 'row',
-          'checkedValue': '7'
-        },
-        'minfollowers': {
-          'filterTitle': 'Minimum user followers',
-          'filterValues': ['None', '1K', '10K', '100K', '1M'],
-          'radioDirection': 'row',
-          'checkedValue': 'None'
-        },
-        'maxfollowers': {
-          'filterTitle': 'Maximum user followers',
-          'filterValues': ['1K', '10K', '100K', '1M', 'None'],
-          'radioDirection': 'row',
-          'checkedValue': 'None'
-        },
-        'minlikes': {
-          'filterTitle': 'Minimum likes',
-          'filterValues': ['None', '1K', '10K', '100K', '1M'],
-          'radioDirection': 'row',
-          'checkedValue': 'None'
-        },
-        'style': {
-          'filterTitle': 'Art Style',
-          'filterValues': ['All', 'MangaColor', 'MangaInk', 'Sketch', 'Fusion', 'Hentai'],
-          'radioDirection': 'column',
-          'checkedValue': 'All'
-        }
-      };
-
-      function updateSearchQuery(queries) {
-        const searchParams = new URLSearchParams(window.location.search);
-        for (const [key, value] of Object.entries(queries)) {
-          searchParams.set(key, value);
-        }
-        window.location.search = searchParams.toString();
-      }
-
-      // View
-      const pageNavigationBox = document.getElementById('page-navigation-box');
-      const filterDropdownContainer = document.getElementById('filter-dropdown-container');
-      const filterDropdownMenu = document.getElementById('filter-dropdown-menu');
-
-      const num_pages = {{num_pages}};
-      const current_page = {{current_page}};
-
-      function addPageButton(pageNumber) {
-        const pageButton = document.createElement('button');
-        pageButton.classList.add('page-button');
-        if (pageNumber === current_page) {
-          pageButton.style.backgroundColor = 'rgb(220, 160, 80)';
-        }
-        pageButton.innerText = pageNumber;
-        pageNavigationBox.appendChild(pageButton);
-        pageButton.addEventListener('click', function() {
-          updateSearchQuery({'page': pageNumber});
-        });
-      }
-
-      function addArrowPageButton(arrowText)  {
-        const arrowPageButton = document.createElement('button');
-        arrowPageButton.classList.add('arrow-page-button');
-        arrowPageButton.innerText = arrowText;
-        pageNavigationBox.appendChild(arrowPageButton);
-        if (arrowPageButton.innerText === '<') {
-          arrowPageButton.addEventListener('click', function() {
-            if (current_page > 1) {
-              window.location.href = '?page=' + (current_page - 1);
-            }
-          });
-        } else if (arrowPageButton.innerText === '>') {
-          arrowPageButton.addEventListener('click', function() {
-            if (current_page < num_pages) {
-              window.location.href = '?page=' + (current_page + 1);
-            }
-          });
-        }
-      }
-
-      function addEllipses() {
-        const ellipses = document.createElement('div');
-        ellipses.classList.add('ellipses');
-        ellipses.innerText = '...';
-        pageNavigationBox.appendChild(ellipses);
-      }
-
-      function addPageButtons(pageNumber) {
-        if (num_pages <= 7) {
-          for (let i = 1; i <= num_pages; i++) {
-            addPageButton(i);
-          }
-          return
-        }
-        addPageButton(1);
-        // handle middle 4 or 5 pages
-        if (current_page  === 1 || current_page === num_pages) {
-          addPageButton(2);
-          addPageButton(3);
-          addEllipses();
-          addPageButton(num_pages-2);
-          addPageButton(num_pages-1);
-        } else if (current_page <= 4) {
-          for (let i = 2; i <= 6; i++) {
-            addPageButton(i);
-          }
-          addEllipses();
-        } else if (current_page >= num_pages - 3) {
-          addEllipses();
-          for (let i = num_pages - 5; i <= num_pages-1; i++) {
-            addPageButton(i);
-          }
-        } else {
-          addEllipses();
-          for (let i = current_page - 2; i <= current_page + 2; i++) {
-            addPageButton(i);
-          }
-          addEllipses();
-        }
-
-        addPageButton(num_pages);
-      }
-
-      function addFilterBox(filterTitle, filterValues, radioName, radioDirection, checkedValue) {
-        const filterBox = document.createElement('div');
-        filterBox.classList.add('filter-box');
-
-        const filterTitleDiv = document.createElement('div');
-        filterTitleDiv.classList.add('filter-title');
-        filterTitleDiv.innerText = filterTitle;
-        filterBox.appendChild(filterTitleDiv);
-
-        const filterRadioGroup = document.createElement('div');
-        filterRadioGroup.classList.add('filter-radio-group');
-        filterRadioGroup.style.flexDirection = radioDirection;
-
-        filterValues.forEach(filterValue => {
-          const filterRadioBox = document.createElement('div');
-          filterRadioBox.classList.add('filter-radio-box');
-          const filterRadioButton = document.createElement('input');
-          filterRadioButton.type = 'radio';
-          filterRadioButton.name = radioName;
-          filterRadioButton.value = filterValue;
-          if (filterValue === checkedValue) {
-            filterRadioButton.checked = true;
-          }
-          const filterRadioLabel = document.createElement('label');
-          filterRadioLabel.htmlFor = filterValue;
-          filterRadioLabel.innerText = filterValue;
-
-          filterRadioBox.appendChild(filterRadioButton);
-          filterRadioBox.appendChild(filterRadioLabel);
-          filterRadioGroup.appendChild(filterRadioBox);
-        });
-
-        filterBox.appendChild(filterRadioGroup);
-        filterDropdownMenu.appendChild(filterBox);
-      }
-
-      // Controller
- 
-      function toggleFilterDropdown() {
-        filterDropdownContainer.classList.toggle("show");
-      }
-
-      function applyFilters() {
-        const queries = {'page': 1};
-        for (const [filterName, filterProperties] of Object.entries(filterDict)) {
-          checkedValue = document.querySelector(`input[name=${filterName}]:checked`).value;
-          if (checkedValue !== 'None') {
-            queries[filterName] = checkedValue;
-          }
-        }
-        updateSearchQuery(queries);
-      }
-
-      dropdownSelectors = ['.filter-button', '.filter-dropdown-menu', '.filter-dropdown-menu *'];
-      window.onclick = (event) => {
-        if (!event.target.matches(dropdownSelectors)) {
-          if (filterDropdownContainer.classList.contains('show')) {
-            filterDropdownContainer.classList.remove('show');
-          }
-        }
-      }
-      // Implementation
-      addArrowPageButton('<');
-      addPageButtons();
-      addArrowPageButton('>');
-
-      for (const [filterName, filterProperties] of Object.entries(filterDict)) {
-        let checkedValue = new URLSearchParams(window.location.search).get(filterName);
-        if (checkedValue == null) {
-          checkedValue = filterProperties['checkedValue'];
-        }
-        addFilterBox(filterProperties['filterTitle'], 
-                     filterProperties['filterValues'], 
-                     filterName, 
-                     filterProperties['radioDirection'], 
-                     checkedValue);
-      }
-    </script>
-    <!-- <script src="{% static 'trending_tweets_app/scripts/twitter-images.js' %}"></script> -->
-  </body>
-</html>
+  </div>
+</div>
+{% endfor %}
+{% endblock media_cards %}

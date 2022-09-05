@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="utf-8">
+    {% block links %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/main.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/filter-dropdown.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/navigation.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/svg.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/media-cards.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/artist-info.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/media-image.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/media-info.css' %}">
+    {% endblock links %}
+    <title>{% block title %}{% endblock title %}</title>
+  </head>
+
+  <body>
+    {% block preload_script %}
+    <script src="{% static 'trending_tweets_app/scripts/preload.js' %}"></script>
+    {% endblock preload_script %}
+
+    <div class="header">
+      <div class="hamburger-icon"></div>
+      
+      <div class="header-right">
+        {% block header_right %}
+        <div class="filter-button-container">
+          <button class="filter-button" onclick="toggleFilterDropdown();">Filter</button>
+          <div id="filter-dropdown-container" class="filter-dropdown-container">
+            <div id="filter-dropdown-menu" class="filter-dropdown-menu">
+            </div>
+            <button class="filter-apply-button" onclick="applyFilters();">Apply</button>
+          </div>
+        </div>
+        {% endblock header_right %}
+      </div>
+    </div>
+
+    <div class="navigation-box">
+      <div class="page-navigation-box" id="page-navigation-box">
+      </div>
+    </div>
+
+    <div class="media-grid">
+      {% block media_cards %}
+      {% endblock media_cards %}
+    </div>
+
+    {% block postload_scripts %}
+    <script>
+      const num_pages = {{num_pages}};
+      const current_page = {{current_page}};
+
+      const filterDict = {
+        'days': {
+          'filterTitle': 'How many days ago',
+          'filterValues': ['1', '2', '3', '4', '5', '6', '7'],
+          'radioDirection': 'row',
+          'checkedValue': '1'
+        },
+        'minfollowers': {
+          'filterTitle': 'Minimum user followers',
+          'filterValues': ['None', '1K', '10K', '100K', '1M'],
+          'radioDirection': 'row',
+          'checkedValue': 'None'
+        },
+        'maxfollowers': {
+          'filterTitle': 'Maximum user followers',
+          'filterValues': ['1K', '10K', '100K', '1M', 'None'],
+          'radioDirection': 'row',
+          'checkedValue': 'None'
+        },
+        'minlikes': {
+          'filterTitle': 'Minimum likes',
+          'filterValues': ['None', '1K', '10K', '100K', '1M'],
+          'radioDirection': 'row',
+          'checkedValue': 'None'
+        },
+        'style': {
+          'filterTitle': 'Art Style',
+          'filterValues': ['All', 'MangaColor', 'MangaInk', 'Sketch', 'Fusion', 'Hentai'],
+          'radioDirection': 'column',
+          'checkedValue': 'All'
+        }
+      };
+    </script>
+    <script src="{% static 'trending_tweets_app/scripts/filter-dropdown.js' %}"></script>
+    <script src="{% static 'trending_tweets_app/scripts/page-navigation.js' %}"></script>
+    {% endblock %}
+  </body>
+</html>
