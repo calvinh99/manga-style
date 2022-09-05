@@ -13,7 +13,11 @@ function aspectRatioConstraints(img) {
 function updateSearchQuery(queries) {
     const searchParams = new URLSearchParams(window.location.search);
     for (const [key, value] of Object.entries(queries)) {
-        searchParams.set(key, value);
+        if (value == null) {
+            searchParams.delete(key);
+        } else {
+            searchParams.set(key, value);
+        }
     }
     window.location.search = searchParams.toString();
 }
@@ -23,9 +27,7 @@ function applyFilters() {
     const queries = {'page': 1};
     for (const filterName of Object.keys(filterDict)) {
         checkedRadio = document.querySelector(`input[name=${filterName}]:checked`).value;
-        if (checkedRadio !== 'None') {  // so you don't add a query string for None
-            queries[filterName] = checkedRadio;
-        }
+        queries[filterName] = (checkedRadio === 'None') ? null : checkedRadio;
     }
     updateSearchQuery(queries);
 }
