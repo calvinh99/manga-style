@@ -1,5 +1,10 @@
 // constrain the loaded images' aspect ratios
-function aspectRatioConstraints(img) {
+function aspectRatioConstraints(img, forcedRatio=null) {
+    if (forcedRatio !== null) {
+        img.style.aspectRatio = forcedRatio;
+        return;
+    }
+
     const aspectRatio = img.naturalWidth / img.naturalHeight;
     if (aspectRatio < 3/4) {
         img.style.aspectRatio = '3/4';
@@ -31,3 +36,5 @@ function applyFilters() {
     }
     updateSearchQuery(queries);
 }
+
+let mediaUrls = [];

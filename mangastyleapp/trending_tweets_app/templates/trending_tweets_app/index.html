@@ -23,11 +23,50 @@
     <div class="artist-username">@{{ trending_tweet.author.username }} &#183; {{ trending_tweet.created_at|tweet_time_since }}</div>
   </div>
 
-  <div class="media-info-row">
-    <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
-          onload="aspectRatioConstraints(this);"
-          onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
-  </div>
+  {% if trending_tweet.mediaattachment_set.count == 1 %}
+    <div class="media-image-box-single media-image-outer-box"  
+         onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
+      <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
+            onload="aspectRatioConstraints(this);">
+    </div>
+  {% elif trending_tweet.mediaattachment_set.count == 2 %}
+    <div class="media-image-box-row media-image-outer-box media-box-16-9"
+         onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
+      <img class="media-image left-image" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
+           onload="aspectRatioConstraints(this, '8/9');">
+      <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.1.media_url }}"
+           onload="aspectRatioConstraints(this, '8/9');">
+    </div>
+  {% elif trending_tweet.mediaattachment_set.count == 3 %}
+    <div class="media-image-box-row media-image-outer-box media-box-16-9"
+         onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
+      <img class="media-image left-image" style="flex: 1;" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
+           onload="aspectRatioConstraints(this, '8/9');">
+      <div class="media-image-box-col" style="flex: 1;">
+        <img class="media-image top-image" src="{{ trending_tweet.mediaattachment_set.all.1.media_url }}"
+            onload="aspectRatioConstraints(this, '16/9');">
+        <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.2.media_url }}"
+            onload="aspectRatioConstraints(this, '16/9');">
+      </div>
+    </div>
+  {% else %}
+    <div class="media-image-box-col media-image-outer-box media-box-16-9"
+         onclick="window.open('https://twitter.com/twitter/status/{{ trending_tweet.tweet_id }}','mywindow');">
+      <div class="media-image-box-row top-image">
+        <img class="media-image left-image" src="{{ trending_tweet.mediaattachment_set.all.0.media_url }}"
+            onload="aspectRatioConstraints(this, '16/9');">
+        <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.1.media_url }}"
+            onload="aspectRatioConstraints(this, '16/9');">
+      </div>
+      <div class="media-image-box-row">
+        <img class="media-image left-image" src="{{ trending_tweet.mediaattachment_set.all.2.media_url }}"
+            onload="aspectRatioConstraints(this, '16/9');">
+        <img class="media-image" src="{{ trending_tweet.mediaattachment_set.all.3.media_url }}"
+            onload="aspectRatioConstraints(this, '16/9');">
+      </div>
+    </div>
+  {% endif %}
+
 
   <div class="media-info-row">
     <div class="rank-container">Rank {{ forloop.counter|add:rank_increment }}</div>

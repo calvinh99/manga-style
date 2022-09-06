@@ -25,13 +25,6 @@
     align-items: center;
 }
 
-.media-image-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
 .media-info-row {
     display: flex;
     flex-direction: row;
