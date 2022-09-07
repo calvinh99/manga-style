@@ -48,6 +48,10 @@ def get_request(url):
             )
             time.sleep(sleep_time)
         return get_request(url)
+    elif response.status_code == 503:
+        log.warning("Service Unavailable. Sleeping for 3 seconds.")
+        time.sleep(3)
+        return get_request(url)
     else:
         raise ValueError("API call did not succeed, http response: {}".format(response.json()))
 

@@ -13,7 +13,7 @@ class TwitterArtist(models.Model):
     
     def __str__(self):
         return self.username
-
+    
     def save(self, *args, **kwargs):
         """Override save method to init last_updated field to datetime.min upon creation."""
         if not self.pk:
@@ -21,6 +21,9 @@ class TwitterArtist(models.Model):
         else:
             self.last_updated = timezone.now()
         super(TwitterArtist, self).save(*args, **kwargs)
+    
+    def get_num_tweets(self):
+        return self.mediatweet_set.count()
 
 class MediaTweet(models.Model):
     tweet_id = models.CharField(max_length=40, unique=True, blank=False)

@@ -100,7 +100,7 @@ class Command(BaseCommand):
             
             return n_updated
         except Exception as e:
-            self.print_flush(self.style.ERROR(f"Error updating group: {usernames}"))
+            self.print_flush(self.style.ERROR(f"Error updating group: {usernames}\nError: {e}"))
             return 0
 
     def handle(self, *args, **options):
