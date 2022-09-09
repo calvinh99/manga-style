@@ -3,11 +3,46 @@ from django.urls import path
 from .models import TwitterArtist, MediaTweet, MediaAttachment
 from django.http import HttpResponse
 from django.utils.html import format_html
+from django.db.models import Max
 
 import logging
 log = logging.getLogger(__name__)
 
 admin.site.site_header = "Mangastyle Admin Dashboard"
+
+class LikesCountFilter(admin.SimpleListFilter):
+    title = ('likes count')
+
+    parameter_name = 'likes'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('>10K', ('Greater than 10K')),
+            ('>20K', ('Greater than 20K')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == '>10K':
+            return queryset.filter(likes_count__gte=10000)
+        if self.value() == '>20K':
+            return queryset.filter(likes_count__gte=20000)
+
+class HasTrainingFilter(admin.SimpleListFilter):
+    title = ('has training data')
+
+    parameter_name = 'has_training'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('Y', ('Yes')),
+            ('N', ('No')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'Y':
+            return queryset.annotate(has_training=Max('mediaattachment__training_data')).filter(has_training=1)
+        if self.value() == 'N':
+            return queryset.annotate(has_training=Max('mediaattachment__training_data')).filter(has_training=0)
 
 class MediaTweetInline(admin.TabularInline):
     model = MediaTweet
@@ -31,7 +66,7 @@ class TwitterArtistAdmin(admin.ModelAdmin):
 
 class MediaTweetAdmin(admin.ModelAdmin):
     search_fields = ['author__username']
-    list_filter = ['mediaattachment__training_data', 'mediaattachment__style']
+    list_filter = [HasTrainingFilter, 'mediaattachment__style', 'possibly_sensitive', LikesCountFilter]
     inlines = [MediaAttachmentInline]
     raw_id_fields = ('author',)
     fields = ('author', 'created_at', 'likes_count', 'retweets_count', 'possibly_sensitive', 'tweet_id', 'text', 'lang')
