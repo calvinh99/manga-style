@@ -5,8 +5,8 @@ from django.http import Http404
 from django.utils.timezone import now
 from datetime import timedelta
 
-from django.db.models import Q
-from .models import MediaTweet
+from django.db.models import Q, Avg
+from .models import MediaAttachment, MediaTweet
 
 import json
 
@@ -25,6 +25,7 @@ filters = {
             '5': 5,
             '6': 6,
             '7': 7,
+            'All Time': None,
         },
         'radioName': 'days',
         'radioDirection': 'row',
@@ -65,13 +66,26 @@ filters = {
         'filterTitle': 'Minimum likes',
         'filterValues': {
             'None': None,
-            '1K': 1000,
             '10K': 10000,
+            '50K': 50000,
             '100K': 100000,
             '200K': 200000,
-            '1M': 1000000,
         },
         'radioName': 'minlikes',
+        'radioDirection': 'row',
+        'radioToCheck': 'None',
+        'default': None,
+    },
+    'maxlikes': {
+        'filterTitle': 'Maximum likes',
+        'filterValues': {
+            '10K': 10000,
+            '50K': 50000,
+            '100K': 100000,
+            '200K': 200000,
+            'None': None,
+        },
+        'radioName': 'maxlikes',
         'radioDirection': 'row',
         'radioToCheck': 'None',
         'default': None,
@@ -80,16 +94,13 @@ filters = {
         'filterTitle': 'Art Style',
         'filterValues': {
             'All': None,
-            'MangaColor': 0,
-            'MangaInk': 1,
-            'Sketch': 2,
-            'Fusion': 3,
-            'Hentai': 4,
+            'mangastyle': 0,
+            'lewd': 2,
         },
         'radioName': 'style',
         'radioDirection': 'column',
-        'radioToCheck': 'All',
-        'default': None,
+        'radioToCheck': 'mangastyle',
+        'default': 0,
     },
 }
 
@@ -103,12 +114,17 @@ def get_filter_query_value(request, filter_name):
 # requires python > 3.8
 def create_filtered_query_set(request):
     # Remove all tweets classified as 'Not Art' (keep unlabeled tweets though)
-    tweets_query = MediaTweet.objects.filter(~Q(mediaattachment__style=9999))
+    tweets_query = (MediaTweet.objects
+                    .filter(author__hide=False)
+                    .filter(likes_count__gte=1000)
+                    .annotate(avg_style=Avg('mediaattachment__style'))
+                    .exclude(avg_style=1))
 
     # 1. Days Filter
     days = get_filter_query_value(request, 'days')
-    time_filter = now() - timedelta(days=days)
-    tweets_query = tweets_query.filter(created_at__gte=time_filter)
+    if days is not None:
+        time_filter = now() - timedelta(days=days)
+        tweets_query = tweets_query.filter(created_at__gte=time_filter)
 
     # 2. Min Followers Filter
     min_followers = get_filter_query_value(request, 'minfollowers')
@@ -125,12 +141,20 @@ def create_filtered_query_set(request):
     if min_likes:
         tweets_query = tweets_query.filter(likes_count__gte=min_likes)
 
-    # 5. Style Filter
+    # 5. Max Likes Filter
+    max_likes = get_filter_query_value(request, 'maxlikes')
+    if max_likes:
+        tweets_query = tweets_query.filter(likes_count__lte=max_likes)
+
+    # 6. Style Filter
     style = get_filter_query_value(request, 'style')
-    if style is not None: # style is 0, so we can't use if style:
-        tweets_query = tweets_query.filter(mediaattachment__style=style)
+    if style is not None: # style can have value 0, so we can't use if style:
+        if style == 0:
+            tweets_query = tweets_query.filter(Q(possibly_sensitive=False) | Q(mediaattachment__style=0)).exclude(mediaattachment__style=2)
+        elif style == 2:
+            tweets_query = tweets_query.filter(Q(possibly_sensitive=True) | Q(mediaattachment__style=2)).exclude(mediaattachment__style=0)
     
-    # 6. Sort by likes descending
+    # 7. Sort by likes descending
     tweets_query = tweets_query.order_by('-likes_count')
     log.warning(f"QUERY: {tweets_query.query}")
     return tweets_query
