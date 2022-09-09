@@ -61,7 +61,7 @@ class MediaAttachmentInline(admin.TabularInline):
 class TwitterArtistAdmin(admin.ModelAdmin):
     search_fields = ['username']
     inlines = [MediaTweetInline]
-    fields = ('last_updated', 'username', 'followers_count', 'user_id', 'name', 'profile_image_url')
+    fields = ('hide', 'last_updated', 'username', 'followers_count', 'user_id', 'name', 'profile_image_url')
     list_display = ('username', 'followers_count', 'last_updated', 'get_num_tweets')
 
 class MediaTweetAdmin(admin.ModelAdmin):

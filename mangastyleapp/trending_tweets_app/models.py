@@ -10,6 +10,7 @@ class TwitterArtist(models.Model):
     followers_count = models.IntegerField(default=0)
     profile_image_url = models.URLField(max_length=200, default='', blank=True)
     last_updated = models.DateTimeField(blank=False)
+    hide = models.BooleanField(default=False)
     
     def __str__(self):
         return self.username
