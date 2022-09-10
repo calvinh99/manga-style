@@ -16,6 +16,8 @@ from datetime import datetime as dt # distinguish btwn datetime and datetime.dat
 from django.utils import timezone
 from django.utils.timezone import make_aware
 
+from mangastyleapp.settings import BASE_DIR
+
 # logging
 import logging
 
@@ -24,7 +26,7 @@ log = logging.getLogger(__name__)
 dt_fmt = "%Y-%m-%dT%H:%M:%S.%fZ"
 
 CURR_DIR = Path(__file__).resolve().parent # commands/
-load_dotenv(CURR_DIR / '.env')
+load_dotenv(BASE_DIR / '.env')
 
 bearer_token = os.environ.get("BEARER_TOKEN")
 mangastylebot_id = os.environ.get("MANGASTYLEBOT_ID")
