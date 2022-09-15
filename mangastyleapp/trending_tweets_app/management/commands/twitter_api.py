@@ -5,7 +5,6 @@ import requests
 
 # Load tokens
 from pathlib import Path
-from dotenv import load_dotenv
 
 # Models
 from trending_tweets_app.models import TwitterArtist, MediaTweet, MediaAttachment
@@ -24,9 +23,6 @@ import logging
 log = logging.getLogger(__name__)
 
 dt_fmt = "%Y-%m-%dT%H:%M:%S.%fZ"
-
-CURR_DIR = Path(__file__).resolve().parent # commands/
-load_dotenv(BASE_DIR / '.env')
 
 bearer_token = os.environ.get("BEARER_TOKEN")
 mangastylebot_id = os.environ.get("MANGASTYLEBOT_ID")

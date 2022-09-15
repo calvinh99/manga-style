@@ -1,17 +1,18 @@
 import time
+from datetime import datetime as dt
+
+from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
-from trending_tweets_app.models import TwitterArtist, MediaTweet, MediaAttachment
-
-from datetime import datetime as dt
 from django.utils.timezone import make_aware
 
+from trending_tweets_app.models import TwitterArtist, MediaTweet, MediaAttachment
 from . import twitter_api
 
 import logging
 log = logging.getLogger(__name__)
 
-dt_checkpoint_path = twitter_api.CURR_DIR / 'dt_checkpoint.txt'
+dt_checkpoint_path = Path(__file__).resolve().parent / 'dt_checkpoint.txt'
 
 def save_dt_checkpoint(dt_checkpoint):
     with open(dt_checkpoint_path, 'w') as f:

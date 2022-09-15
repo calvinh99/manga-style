@@ -16,9 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-from dotenv import load_dotenv
-load_dotenv(BASE_DIR / '.env')
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -26,9 +23,9 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.environ.get('DJANGO_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1'] # change to domain name later
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(' ')
 
 # Application definition
 
@@ -78,12 +75,15 @@ WSGI_APPLICATION = 'mangastyleapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': os.getenv('DB_ENGINE'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
         'OPTIONS': {
-            'read_default_file': str(BASE_DIR / 'my.cnf'),
-            # Tell MySQLdb to connect with 'utf8mb4' character set
-            "charset": "utf8mb4",
-            },
+            'database': os.getenv('MYSQL_DATABASE'),
+            'user': os.getenv('MYSQL_USER'),
+            'password': os.getenv('MYSQL_PASSWORD'),
+            'charset': os.getenv('MYSQL_CHARSET'),
+        },
     },
      # Tell Django to build the test database with the 'utf8mb4' character set
     "TEST": {
@@ -128,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'
+# STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

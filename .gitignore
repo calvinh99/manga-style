@@ -21,5 +21,4 @@ __pycache__/
 # Django
 db.sqlite3
 
-# dotenv
-.env
+.env*
