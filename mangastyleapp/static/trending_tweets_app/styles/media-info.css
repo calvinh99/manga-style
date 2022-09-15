@@ -1,0 +1,20 @@
+.rank-container {
+    color: rgb(244, 244, 244);
+    font-weight: 500;
+    padding-left: 6px;
+    padding-right: 4px;
+}
+
+.likes-count-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    position: absolute;
+    right: 10px;
+}
+
+.likes-icon-container {
+    margin-right: 8px;
+    margin-top: 2px;
+}
