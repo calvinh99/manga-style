@@ -29,8 +29,8 @@ filters = {
         },
         'radioName': 'days',
         'radioDirection': 'row',
-        'radioToCheck': '1',
-        'default': 1,
+        'radioToCheck': '3',
+        'default': 3,
     },
     'minfollowers': {
         'filterTitle': 'Minimum user followers',

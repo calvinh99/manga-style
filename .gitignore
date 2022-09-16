@@ -21,3 +21,6 @@ awskeypair.pem
 # dev docker files
 docker-compose.yml
 Dockerfile
+
+# app specific
+dt_checkpoint.txt
