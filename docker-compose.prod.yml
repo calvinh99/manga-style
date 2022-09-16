@@ -16,6 +16,7 @@ services:
       dockerfile: Dockerfile.prod
     volumes:
       - static_volume:/app/staticfiles
+      - ./mangastyleapp:/app
     env_file:
       - ./.env.prod
     command: gunicorn mangastyleapp.wsgi:application --bind 0.0.0.0:8000
