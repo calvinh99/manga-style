@@ -1,24 +1,23 @@
 # auto files
 .DS_Store
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# WebDriver Manager
-.wdm
-
 # folders
 data
-
-# mysql db
-my.cnf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Django
+# db
 backup.sql
 
+# .env
 .env*
+
+# aws
+awskeypair.pem
+
+# dev docker files
+docker-compose.yml
+Dockerfile
