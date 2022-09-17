@@ -1,8 +1,8 @@
 .media-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    column-gap: 20px;
-    row-gap: 30px;
+    column-gap: 60px;
+    row-gap: 60px;
     justify-content: center;
 }
 
