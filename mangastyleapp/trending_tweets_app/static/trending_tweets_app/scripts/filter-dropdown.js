@@ -1,5 +1,4 @@
 // View
-const filterDropdownContainer = document.getElementById('filter-dropdown-container');
 const filterDropdownMenu = document.getElementById('filter-dropdown-menu');
  
 // create the fitler title div
@@ -49,20 +48,6 @@ function addFilterBox(filterTitle, filterValues, radioName, radioDirection, chec
 
     // 3. Append the filter to the dropdown menu
     filterDropdownMenu.appendChild(filterBox);
-}
-
-// Controller
-function toggleFilterDropdown() {
-    filterDropdownContainer.classList.toggle("show");
-}
-
-const dropdownSelectors = ['.filter-button', '.filter-dropdown-menu', '.filter-dropdown-menu *'];
-window.onclick = (event) => {
-    if (!event.target.matches(dropdownSelectors)) {
-        if (filterDropdownContainer.classList.contains('show')) {
-        filterDropdownContainer.classList.remove('show');
-        }
-    }
 }
 
 // Implementation
