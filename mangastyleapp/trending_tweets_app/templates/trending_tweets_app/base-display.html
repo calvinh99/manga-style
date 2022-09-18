@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/main.css' %}">
     <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/info-modal.css' %}">
     <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/filter-dropdown.css' %}">
     <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/navigation.css' %}">
     <link rel="stylesheet" href="{% static 'trending_tweets_app/styles/svg.css' %}">
@@ -29,7 +30,21 @@
 
     <div class="header">
       <div class="info-block">
-        <button class="info-button">i</button>
+        <button id="info-button" class="info-button" onclick="toggleInfoModal();">i</button>
+      </div>
+      <div id="info-modal" class="info-modal-box">
+        <p>
+          Hi fellow art lover! I created this website so that I could view the most popular manga-like art on Twitter. 
+          All tweets are sorted by their number of likes and only the most recent tweets are displayed.
+          <br><br>
+          You will find mostly mangastyle art, but the algorithm I use also accepts other digital art styles.
+          <br><br>
+          I hope artists can find this website useful and art enjoyers can discover new talented artists to follow. 
+          <br><br>
+          Please join the discord if you love art or have any feedback about the website!
+          <br><br>
+          <p style="font-weight: 500; text-align: center;"><i>- scholarc</i></p>
+        </p>
       </div>
       
       <div class="header-right">
@@ -63,6 +78,7 @@
 
       const filterDict = JSON.parse('{{ filters|safe  }}');
     </script>
+    <script src="{% static 'trending_tweets_app/scripts/box-toggles.js' %}"></script>
     <script src="{% static 'trending_tweets_app/scripts/filter-dropdown.js' %}"></script>
     <script src="{% static 'trending_tweets_app/scripts/page-navigation.js' %}"></script>
     {% endblock %}
