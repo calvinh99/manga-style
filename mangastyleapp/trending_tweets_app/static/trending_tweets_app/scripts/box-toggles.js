@@ -11,7 +11,7 @@ function toggleFilterDropdown() {
 
 const boxSelectors = ['.filter-button', '.filter-dropdown-menu', '.filter-dropdown-menu *',
                       '.info-button'];
-window.onclick = (event) => {
+window.addEventListener('click', function(event) {
     if (!event.target.matches(boxSelectors)) {
         if (filterDropdownContainer.classList.contains('show')) {
             filterDropdownContainer.classList.remove('show');
@@ -20,4 +20,4 @@ window.onclick = (event) => {
             infoModal.classList.remove('show-modal');
         }
     }
-}
+});
