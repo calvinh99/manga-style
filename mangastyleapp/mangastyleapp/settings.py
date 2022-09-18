@@ -27,6 +27,9 @@ DEBUG = (os.getenv('DEBUG') == 'True')
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(' ')
 
+if os.getenv('PRODUCTION', default='False') == 'True':
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Application definition
 
 INSTALLED_APPS = [
