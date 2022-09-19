@@ -1,6 +1,6 @@
 # Mangastyle
 
-()[siteexample.png]
+![mangastyle gallery](siteexample.png)
 
 Visit [mangastyle.lol](https://mangastyle.lol/).
 
