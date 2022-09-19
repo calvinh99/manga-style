@@ -26,4 +26,4 @@ Dockerfile
 dt_checkpoint.txt
 
 # shell scripts
-sync_files_to_aws.sh
+deploy_secret_files_to_aws.sh
