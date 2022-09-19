@@ -18,12 +18,12 @@ backup.sql
 # aws
 awskeypair.pem
 
-# dev docker files
-docker-compose.yml
-Dockerfile
+# docker compose files
+docker-compose.*
 
 # app specific
 dt_checkpoint.txt
 
-# shell scripts
+# scripts
+shell_scripts
 deploy_secret_files_to_aws.sh
