@@ -17,15 +17,20 @@ function addPageButton(pageNumber) {
 function addArrowPageButton(arrowText)  {
     const arrowPageButton = document.createElement('button');
     arrowPageButton.classList.add('arrow-page-button');
-    arrowPageButton.innerText = arrowText;
+    arrowIcon = document.createElement('i');
+    arrowPageButton.appendChild(arrowIcon);
     pageNavigationBox.appendChild(arrowPageButton);
-    if (arrowPageButton.innerText === '<') {
+    if (arrowText === '<') {
+        arrowPageButton.style.paddingRight = '2px';
+        arrowIcon.classList.add('arrow', 'left');
         arrowPageButton.addEventListener('click', function() {
             if (current_page > 1) {
                 updateSearchQuery({'page': (current_page - 1)});
             }
         });
-    } else if (arrowPageButton.innerText === '>') {
+    } else if (arrowText === '>') {
+        arrowPageButton.style.paddingLeft = '2px';
+        arrowIcon.classList.add('arrow', 'right');
         arrowPageButton.addEventListener('click', function() {
             if (current_page < num_pages) {
                 updateSearchQuery({'page': (current_page + 1)});

@@ -12,22 +12,29 @@
     justify-content: space-between;
 }
 
+.header-left {
+    min-width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
 .info-block {
     background-color: rgba(0, 0, 0, 0);
     padding: 10px 10px 10px 10px;
     border-radius: 50%;
-    margin-left: 10px;
     transition: 0.15s;
 }
 
 .info-button {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     background-color: rgba(0, 0, 0, 0);
-    border-radius: 14px;
+    border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.4);
     color: rgba(255, 255, 255, 0.4);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
     transition: 0.15s;
