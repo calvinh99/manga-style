@@ -6,15 +6,16 @@ function toggleInfoModal() {
 }
 
 function toggleFilterDropdown() {
-    filterDropdownContainer.classList.toggle("show");
+    filterDropdownContainer.classList.toggle('show-filter-dropdown');
 }
 
 const boxSelectors = ['.filter-button', '.filter-dropdown-menu', '.filter-dropdown-menu *',
                       '.info-button'];
+                      
 window.addEventListener('click', function(event) {
     if (!event.target.matches(boxSelectors)) {
-        if (filterDropdownContainer.classList.contains('show')) {
-            filterDropdownContainer.classList.remove('show');
+        if (filterDropdownContainer.classList.contains('show-filter-dropdown')) {
+            filterDropdownContainer.classList.remove('show-filter-dropdown');
         }
         if (infoModal.classList.contains('show-modal')) {
             infoModal.classList.remove('show-modal');

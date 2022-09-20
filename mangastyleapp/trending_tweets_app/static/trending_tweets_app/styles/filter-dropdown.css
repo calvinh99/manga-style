@@ -17,15 +17,19 @@
 }
 
 .filter-dropdown-container {
+    position: fixed;
     display: none;
-    background-color: rgba(236, 235, 255, 0.9);
-    border-radius: 10px;
+    background-color: rgba(20, 20, 20, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     width: fit-content;
-    height: fit-content;
-    position: absolute;
-    top: 36px;
-    padding-top: 12px;
-    overflow: hidden;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9998;
+    overflow-x: hidden;
+    margin-top: 61px;
+    padding-top: 14px;
 }
 
 .filter-dropdown-menu {
@@ -44,17 +48,17 @@
     align-items: left;
     font-size: 12px;
     padding: 0px 12px 12px 12px;
+    color: rgba(187, 187, 187, 0.853);
 }
 
 .filter-title {
     font-weight: 500;
-    color: rgb(40, 40, 40);
     padding: 0 0 4px 0;
 }
 
 .filter-radio-group {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: left;
     align-items: left;
 }
@@ -72,26 +76,26 @@
 }
 
 .filter-apply-button {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 1);
     color: rgba(230, 230, 230, 0.9);
     border: none;
     cursor: pointer;
-    padding: 6px 0 6px 0;
+    padding: 16px 0 16px 0;
     font-size: 14px;
     width: 100%;
-    position: relative;
-    bottom: 0;
+    position: absolute;
+    bottom: 74px;
 }
 
 .filter-apply-button:hover {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .filter-apply-button:active {
-    background-color: rgba(0, 0, 0, 0.5 );
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
-.show {
+.show-filter-dropdown {
     display: flex;
     flex-direction: column;
     justify-content: top;

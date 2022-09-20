@@ -17,6 +17,7 @@ function createRadioBox(radioName, radioValue, checkedValue) {
     const filterRadioButton = document.createElement('input');
     filterRadioButton.type = 'radio';
     filterRadioButton.name = radioName;
+    filterRadioButton.id = radioValue;
     filterRadioButton.value = radioValue;
     if (radioValue === checkedValue) {
         filterRadioButton.checked = true;

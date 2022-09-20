@@ -28,6 +28,11 @@
     <script src="{% static 'trending_tweets_app/scripts/preload.js' %}"></script>
     {% endblock preload_script %}
 
+    <div id="filter-dropdown-container" class="filter-dropdown-container">
+      <div id="filter-dropdown-menu" class="filter-dropdown-menu"></div>
+      <button class="filter-apply-button" onclick="applyFilters();">Apply</button>
+    </div>
+
     <div class="header">
       <div class="header-left">
         <div class="info-block">
@@ -53,11 +58,6 @@
         {% block header_right %}
         <div class="filter-button-container">
           <button class="filter-button" onclick="toggleFilterDropdown();">Filter</button>
-          <div id="filter-dropdown-container" class="filter-dropdown-container">
-            <div id="filter-dropdown-menu" class="filter-dropdown-menu">
-            </div>
-            <button class="filter-apply-button" onclick="applyFilters();">Apply</button>
-          </div>
         </div>
         {% endblock header_right %}
       </div>
@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <div class="media-grid">
+    <div class="media-grid" onclick="void(0);">
       {% block media_cards %}
       {% endblock media_cards %}
     </div>
