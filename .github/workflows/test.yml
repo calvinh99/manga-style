@@ -13,6 +13,3 @@ jobs:
     - name: Docker compose build
       run: |
         docker-compose -f docker-compose.ci.yml up -d --build
-    - name: Django test
-      run: |
-        docker exec djangoapp python manage.py test
