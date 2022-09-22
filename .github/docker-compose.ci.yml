@@ -26,7 +26,6 @@ services:
     ports:
       - '8000:8000'
     environment:
-      - BEARER_TOKEN=${{ secrets.BEARER_TOKEN }}
       - DEBUG=True
       - DJANGO_SECRET=test_secret_123
       - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
