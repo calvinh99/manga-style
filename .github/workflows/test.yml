@@ -10,14 +10,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Explore directory
-      run: |
-        pwd
-        ls -a
-        ls -a .github/
     - name: Docker compose build
       run: |
-        docker-compose -f .github/docker-compose.ci.yml up -d --build
+        docker-compose -f docker-compose.ci.yml up -d --build
     - name: Django test
       run: |
         docker exec djangoapp python manage.py test
