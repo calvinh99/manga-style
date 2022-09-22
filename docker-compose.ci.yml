@@ -36,7 +36,6 @@ services:
       - MYSQL_USER=user
       - MYSQL_PASSWORD=pass
       - MYSQL_CHARSET=utf8mb4
-    command: python manage.py test
     
 volumes:
   db_data:
