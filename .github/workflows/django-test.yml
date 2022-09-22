@@ -9,7 +9,7 @@ jobs:
     env:
       DJANGO_SECRET: test_secret_1234567890
       DEBUG: True
-      ALLOWED_HOSTS: '*'
+      DJANGO_ALLOWED_HOSTS: '*'
       DB_ENGINE: 'django.db.backends.mysql'
       DB_HOST: 'db'
       DB_PORT: '3306'
