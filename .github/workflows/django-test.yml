@@ -6,6 +6,18 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      DJANGO_SECRET: test_secret_1234567890
+      DEBUG: True
+      ALLOWED_HOSTS: '*'
+      DB_ENGINE: 'django.db.backends.mysql'
+      DB_HOST: 'db'
+      DB_PORT: '3306'
+      MYSQL_DATABASE: 'test'
+      MYSQL_USER: 'test'
+      MYSQL_PASSWORD: 'test'
+      MYSQL_CHARSET: utf8mb4
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.8.14
