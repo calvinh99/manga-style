@@ -1,0 +1,14 @@
+name: Docker Compose Django Test
+
+on: push
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker compose build
+      run: docker-compose -f docker-compose.yml up -d --build
+    - name: Run django test
+      run: docker exec djangoapp python manage.py test
