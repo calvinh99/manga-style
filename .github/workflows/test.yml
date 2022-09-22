@@ -12,10 +12,11 @@ jobs:
     - uses: actions/checkout@v3
     - name: Explore directory
       run: |
+        pwd
         ls -a
     - name: Docker compose build
       run: |
-        docker-compose -f ./.github/docker-compose.ci.yml up -d --build
+        docker-compose -f .github/docker-compose.ci.yml up -d --build
     - name: Django test
       run: |
         docker exec djangoapp python manage.py test
