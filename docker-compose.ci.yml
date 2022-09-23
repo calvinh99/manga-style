@@ -32,8 +32,8 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - MYSQL_DATABASE=mangastyle
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=pass
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
       - MYSQL_CHARSET=utf8mb4
     depends_on:
       - db
