@@ -15,7 +15,7 @@ jobs:
         docker-compose -f docker-compose.ci.yml up -d --build
     - name: Wait for MYSQL container
       run: |
-        ./wait-until.sh "docker exec -T -e MYSQL_PWD=root mysqldb mysql -D mangastyle -e 'select 1'"
+        ./wait-until.sh "docker exec -e MYSQL_PWD=root mysqldb mysql -D mangastyle -e 'select 1'"
     - name: Django test
       run: |
         docker exec djangoapp python manage.py test
