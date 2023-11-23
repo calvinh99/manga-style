@@ -10,10 +10,13 @@ __pycache__/
 *$py.class
 
 # db
-backup.sql
+mangastyle-backup.sql
 
 # .env
 .env*
+
+# venv
+appenv/
 
 # aws
 awskeypair.pem

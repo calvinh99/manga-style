@@ -1,0 +1,13 @@
+.DS_Store
+__pycache__
+Dockerfile
+Dockerfile.prod
+.dockerignore
+
+.env*
+docker-compose.yml
+*.md
+*.png
+*.pem
+.gitignore
+*.sql
