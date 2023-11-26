@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block links %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="{% static 'tweets/styles/main.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/info-modal.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/filter-dropdown.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/navigation.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/svg.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/media-cards.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/artist-info.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/media-images.css' %}">
+    <link rel="stylesheet" href="{% static 'tweets/styles/media-info.css' %}">
+    {% endblock links %}
+    <title>{% block title %}{% endblock title %}</title>
+  </head>
+
+  <body>
+    {% block preload_script %}
+    <script src="{% static 'tweets/scripts/preload.js' %}"></script>
+    {% endblock preload_script %}
+
+    <div id="filter-dropdown-container" class="filter-dropdown-container">
+      <div id="filter-dropdown-menu" class="filter-dropdown-menu"></div>
+      <button class="filter-apply-button" onclick="applyFilters();">Apply</button>
+    </div>
+
+    <div class="header">
+      <div class="header-left">
+        <div class="info-block">
+          <button id="info-button" class="info-button" onclick="toggleInfoModal();">i</button>
+        </div>
+        <div id="info-modal" class="info-modal-box" onclick="void(0);">
+          <p>
+            Hi fellow art lover! I created this website so that I could view the most popular manga-like art on Twitter. 
+            All tweets are sorted by their number of likes and only the most recent tweets are displayed.
+            <br><br>
+            You will find mostly mangastyle art, but the algorithm I use also accepts other digital art styles.
+            <br><br>
+            I hope artists can find this website useful and art enjoyers can discover new talented artists to follow. 
+            <br><br>
+            Please join the discord if you love art or have any feedback about the website!
+            <br><br>
+            <p style="font-weight: 500; text-align: center;"><i>- scholarc</i></p>
+          </p>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        {% block header_right %}
+        <div class="filter-button-container">
+          <button class="filter-button" onclick="toggleFilterDropdown();">Filter</button>
+        </div>
+        {% endblock header_right %}
+      </div>
+    </div>
+
+    <div class="navigation-box">
+      <div class="page-navigation-box" id="page-navigation-box">
+      </div>
+    </div>
+
+    <div class="media-grid" onclick="void(0);">
+      {% block media_cards %}
+      {% endblock media_cards %}
+    </div>
+
+    {% block postload_scripts %}
+    <script>
+      const num_pages = {{ num_pages }};
+      const current_page = {{ current_page }};
+
+      const filterDict = JSON.parse('{{ filters|safe  }}');
+    </script>
+    <script src="{% static 'tweets/scripts/box-toggles.js' %}"></script>
+    <script src="{% static 'tweets/scripts/filter-dropdown.js' %}"></script>
+    <script src="{% static 'tweets/scripts/page-navigation.js' %}"></script>
+    {% endblock %}
+  </body>
+</html>
