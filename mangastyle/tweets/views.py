@@ -58,7 +58,7 @@ filters = {
     'minlikes': {
         'filterTitle': 'Minimum likes',
         'filterValues': {
-            'Default': 3333,
+            'Default': 0,
             '10K': 10000,
             '50K': 50000,
             '100K': 100000,
@@ -67,7 +67,7 @@ filters = {
         'radioName': 'minlikes',
         'radioDirection': 'row',
         'radioToCheck': 'Default',
-        'default': 3333,
+        'default': 0,
     },
     'maxlikes': {
         'filterTitle': 'Maximum likes',
@@ -128,7 +128,7 @@ def create_filtered_query_set(request):
     # 4. Min Likes Filter
     min_likes = get_filter_query_value(request, 'minlikes')
     if min_likes:
-        min_likes = max(min_likes, 3333) # 3333 is the default
+        min_likes = max(min_likes, 0)
         tweets_query = tweets_query.filter(likes_count__gte=min_likes)
 
     # 5. Max Likes Filter

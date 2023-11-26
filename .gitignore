@@ -19,13 +19,13 @@ mangastyle-backup.sql
 appenv/
 
 # aws
-awskeypair.pem
+*.pem
 
 # docker compose files
 docker-compose.*
 
 # app specific
-dt_checkpoint.txt
+processed_tweets.txt
 
 # scripts
 shell_scripts
