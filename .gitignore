@@ -21,8 +21,7 @@ appenv/
 # aws
 *.pem
 
-# docker compose files
-docker-compose.*
+backups/
 
 # app specific
 processed_tweets.txt
