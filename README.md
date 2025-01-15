@@ -1,6 +1,8 @@
 # Mangastyle
 
-NOTE: It is with regret that Twitter API is no longer free since companies began abusing Twitter API en masse for training data for LLMs—understandable. Side effect is smaller projects like mine can no longer get real-time data. However, before the shutdown I was able to get an impressive **414K+** viral manga-style art tweets! So this website is still of immense value to artists and those who love manga-style art.
+UPDATE: Temporarily shutdown the site cuz I ran out of free tier on AWS.
+
+UPDATE: It is with regret that Twitter API is no longer free since companies began abusing Twitter API en masse for training data for LLMs—understandable. Side effect is smaller projects like mine can no longer get real-time data. However, before the shutdown I was able to get an impressive **414K+** viral manga-style art tweets! So this website is still of immense value to artists and those who love manga-style art.
 
 ![mangastyle gallery](siteexample.png)
 
